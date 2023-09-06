@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base, sessionmaker
+from starlette.applications import Starlette
+from starlette_admin.contrib.sqla import Admin, ModelView
 
 
 url = URL.create(
@@ -28,5 +30,14 @@ class Course(Base):
 
 Base.metadata.create_all(engine)
 
+app = Starlette()  
+
+admin = Admin(engine, title="BookStore")
+
+
+admin.add_view(ModelView(Course,session))
+
+
+admin.mount_to(app)
 
 
